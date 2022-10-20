@@ -72,11 +72,15 @@ class PostsController {
 
   // 좋아요 하는 함수
   putLike = async (req, res, next) => {
-    const { postId } = req.params;
-    const { userId } = res.locals.user;
-    const putLike = await this.postService.putLike(postId, userId);
+    try {
+      const { postId } = req.params;
+      const { userId } = res.locals.user;
+      const putLike = await this.postService.putLike(postId, userId);
 
-    res.status(200).json({ data : putLike })
+      res.status(200).json({ data : putLike })
+    } catch(err) {
+      res.status(400).json({ err : err.message });
+    }
   }
 
   // 자기가 좋아요 올린 게시글 찾는 함수
