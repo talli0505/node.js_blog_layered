@@ -70,16 +70,21 @@ class PostService {
     }
   };
 
-  // 좋아요를 하기 위한 함수
+    // 좋아요를 하기 위한 함수
   putLike = async (postId, userId) => {
+    const findPost = await this.postRepository.findPost(postId)
     const isPutLike = await this.postRepository.findOneLikes(postId, userId)
 
-    if(!isPutLike) {
-      await this.postRepository.putLike(postId, userId)
-      return {'msg' : '좋아요를 올렸습니다.'}
+    if(!findPost) {
+      throw new Error('게시글이 없음')
     } else {
-      await this.postRepository.putHate(postId, userId)
-      return {'msg' : '좋아요를 내렸습니다.'}
+      if(!isPutLike) {
+        await this.postRepository.putLike(postId, userId)
+        return {'msg' : '좋아요를 올렸습니다.'}
+      } else {
+        await this.postRepository.putHate(postId, userId)
+        return {'msg' : '좋아요를 내렸습니다.'}
+      }
     }
   
   }
